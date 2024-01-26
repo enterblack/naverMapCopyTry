@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.navermapcopytry.adapter.LocationObjectAdapter
 import com.google.android.gms.maps.CameraUpdate
@@ -14,25 +15,27 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 
 class MainActivity : AppCompatActivity() , OnMapReadyCallback {
     private val locationRequestCode = 1009
-    lateinit var locationObjectRecycler : RecyclerView
-    lateinit var mapView : MapView
-    lateinit var locationObjectAdapter : LocationObjectAdapter
+    private lateinit var locationObjectRecycler : RecyclerView
+    private lateinit var mapView : SupportMapFragment
+    private lateinit var googleMap: GoogleMap
+    private lateinit var locationObjectAdapter : LocationObjectAdapter
     private val testLocationObject = listOf("편의점","병원","식당","카페","약국","추천")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        locationObjectRecycler = findViewById(R.id.search_location_recycler)
-//        locationObjectAdapter = LocationObjectAdapter(testLocationObject)
-//        locationObjectRecycler.adapter = locationObjectAdapter
+        locationObjectRecycler = findViewById(R.id.search_location_recycler)
+        locationObjectAdapter = LocationObjectAdapter(testLocationObject)
+        locationObjectRecycler.adapter = locationObjectAdapter
         MapsInitializer.initialize(this)
         checkLocationPermission()
-        mapView = findViewById(R.id.map_view)
-        mapView.onCreate(savedInstanceState)
+
+        mapView = supportFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
         mapView.getMapAsync(this)
 
     }
@@ -67,7 +70,9 @@ class MainActivity : AppCompatActivity() , OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: GoogleMap) {
+        googleMap = p0
         val defaultLocation = LatLng(37.7749, -122.4194) // 샌프란시스코의 위도, 경도
-        p0.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
+        val seoul = LatLng(37.556, 126.97)
+        p0.moveCamera(CameraUpdateFactory.newLatLng(seoul))
     }
 }
