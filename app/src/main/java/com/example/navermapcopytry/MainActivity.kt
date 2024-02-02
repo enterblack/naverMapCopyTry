@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.navermapcopytry.adapter.LocationObjectAdapter
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity() , OnMapReadyCallback {
     private lateinit var mapView : SupportMapFragment
     private lateinit var googleMap: GoogleMap
     private lateinit var locationObjectAdapter : LocationObjectAdapter
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val testLocationObject = listOf("편의점","병원","식당","카페","약국","추천")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,7 @@ class MainActivity : AppCompatActivity() , OnMapReadyCallback {
         locationObjectRecycler.adapter = locationObjectAdapter
         MapsInitializer.initialize(this)
         checkLocationPermission()
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         mapView = supportFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment
         mapView.getMapAsync(this)
 
@@ -71,7 +74,7 @@ class MainActivity : AppCompatActivity() , OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         googleMap = p0
-        val defaultLocation = LatLng(37.7749, -122.4194) // 샌프란시스코의 위도, 경도
+        //맵이 준비 되었다고 위치 정보를 호출할려니까 오류가 나는듯
         val seoul = LatLng(37.556, 126.97)
         p0.moveCamera(CameraUpdateFactory.newLatLng(seoul))
     }
